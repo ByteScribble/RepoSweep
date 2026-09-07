@@ -1,0 +1,49 @@
+  <div class="scrim"></div>
+  <div class="palette">
+    <div class="pal-input">
+      <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <circle cx="7" cy="7" r="4.6" stroke="currentColor" stroke-width="1.3"/>
+        <path d="M10.6 10.6 14 14" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+      </svg>
+      <span class="q">payment</span><span class="bar"></span>
+    </div>
+    <div class="pal-body">
+      <div class="label pal-group">Symbols</div>
+      <div class="pal-row on">
+        <span class="dot"></span><span class="name">PaymentService</span>
+        <span class="kind">Service · src/payment/PaymentService.java</span>
+      </div>
+      <div class="pal-row">
+        <span class="dot db"></span><span class="name">PaymentRepository</span>
+        <span class="kind">Repository · src/payment/PaymentRepository.java</span>
+      </div>
+
+      <div class="label pal-group">Entry points</div>
+      <div class="pal-row">
+        <span class="dot http"></span><span class="name">POST /payments</span>
+        <span class="kind">API · PaymentController</span>
+      </div>
+      <div class="pal-row">
+        <span class="dot http"></span><span class="name">GET /payments/{id}</span>
+        <span class="kind">API · PaymentController</span>
+      </div>
+
+      <div class="label pal-group">Events</div>
+      <div class="pal-row">
+        <span class="dot event"></span><span class="name">payment.completed</span>
+        <span class="kind">Kafka topic · 2 consumers</span>
+      </div>
+
+      <div class="label pal-group">Data</div>
+      <div class="pal-row">
+        <span class="dot db"></span><span class="name">payments</span>
+        <span class="kind">PostgreSQL table · 11 columns</span>
+      </div>
+    </div>
+    <div class="pal-foot">
+      <span class="kbd">↑↓</span> Navigate
+      <span class="kbd">↵</span> Open
+      <span class="kbd">⌘↵</span> Open source
+      <span class="right">Ask a question instead <span class="kbd">⌘J</span></span>
+    </div>
+  </div>

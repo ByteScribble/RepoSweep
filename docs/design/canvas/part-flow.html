@@ -1,0 +1,134 @@
+    <aside class="flowlist">
+      <header>
+        <div class="label">Flows</div>
+        <div class="meta" style="margin-top:6px;">9 entry points detected</div>
+      </header>
+      <ul>
+        <li class="fl-item on">
+          <div class="fl-top"><span class="verb">POST</span><code>/payments</code></div>
+          <div class="meta">10 steps · Payments</div>
+        </li>
+        <li class="fl-item">
+          <div class="fl-top"><span class="verb">POST</span><code>/payments/{id}/refund</code></div>
+          <div class="meta">8 steps · Refunds</div>
+        </li>
+        <li class="fl-item">
+          <div class="fl-top"><span class="verb">GET</span><code>/payments/{id}</code></div>
+          <div class="meta">4 steps · Payments</div>
+        </li>
+        <li class="fl-item">
+          <div class="fl-top"><span class="verb ev">EVENT</span><code>order.created</code></div>
+          <div class="meta">6 steps · Orders</div>
+        </li>
+        <li class="fl-item">
+          <div class="fl-top"><span class="verb ev">EVENT</span><code>payment.failed</code></div>
+          <div class="meta">5 steps · Payments</div>
+        </li>
+        <li class="fl-item">
+          <div class="fl-top"><span class="verb cron">CRON</span><code>reconcile-nightly</code></div>
+          <div class="meta">7 steps · Payments</div>
+        </li>
+        <li class="fl-item">
+          <div class="fl-top"><span class="verb">POST</span><code>/orders</code></div>
+          <div class="meta">9 steps · Orders</div>
+        </li>
+      </ul>
+    </aside>
+
+    <main class="flowmain">
+      <div class="ctxbar">
+        <div class="ctx-top">
+          <h2>POST /payments</h2>
+          <div class="meta">HTTP POST · 10 steps · Payments domain</div>
+        </div>
+        <div class="tabs">
+          <span>Overview</span>
+          <span class="on">Execution</span>
+          <span>Data</span>
+          <span>Events</span>
+        </div>
+      </div>
+
+      <div class="flowbody">
+        <div class="narrative">
+          <ol class="steps">
+            <li class="step">
+              <div class="srow"><span class="dot http"></span><code>POST /payments</code><span class="rel">Entry point</span></div>
+              <div class="spath">PaymentController.java:41</div>
+            </li>
+            <li class="step">
+              <div class="srow"><span class="dot"></span><code>PaymentController.create()</code><span class="rel">Handles</span></div>
+              <div class="spath">PaymentController.java:44</div>
+            </li>
+            <li class="step">
+              <div class="srow"><span class="dot"></span><code>PaymentService.process()</code><span class="rel">Calls</span></div>
+              <div class="spath">PaymentService.java:58</div>
+              <ol class="sub">
+                <li class="step">
+                  <div class="srow"><span class="dot"></span><code>FraudService.check()</code><span class="rel">Calls</span></div>
+                  <div class="spath">PaymentService.java:72</div>
+                </li>
+                <li class="step">
+                  <div class="srow"><span class="dot"></span><code>GatewayFactory.select()</code><span class="badge">Inferred</span><span class="rel">Calls</span></div>
+                  <div class="spath">PaymentService.java:81 · resolved through the Gateway interface, 1 implementation</div>
+                  <ol class="sub">
+                    <li class="step">
+                      <div class="srow"><span class="dot"></span><code>StripeGateway.charge()</code><span class="rel">Calls</span></div>
+                      <div class="spath">StripeGateway.java:29</div>
+                      <ol class="sub">
+                        <li class="step">
+                          <div class="srow"><span class="dot ext"></span><code>Stripe</code><span class="rel">External</span></div>
+                          <div class="spath">api.stripe.com/v1/charges</div>
+                        </li>
+                      </ol>
+                    </li>
+                  </ol>
+                </li>
+              </ol>
+            </li>
+            <li class="step">
+              <div class="srow"><span class="dot"></span><code>PaymentRepository.save()</code><span class="rel">Calls</span></div>
+              <div class="spath">PaymentService.java:96</div>
+              <ol class="sub">
+                <li class="step">
+                  <div class="srow"><span class="dot db"></span><code>payments</code><span class="rel">Writes to</span></div>
+                  <div class="spath">PostgreSQL · 6 columns touched</div>
+                </li>
+              </ol>
+            </li>
+            <li class="step">
+              <div class="srow"><span class="dot event"></span><code>payment.completed</code><span class="rel">Publishes</span></div>
+              <div class="spath">PaymentService.java:104</div>
+              <ol class="sub">
+                <li class="step">
+                  <div class="srow"><span class="dot event"></span><code>Kafka</code><span class="rel">Topic</span></div>
+                  <div class="spath">payments.events · 2 consumers</div>
+                </li>
+              </ol>
+            </li>
+          </ol>
+        </div>
+
+        <aside class="conf">
+          <div class="label">Flow confidence</div>
+          <div class="conf-value"><span class="dot event"></span>inferred</div>
+          <p>The weakest step sets the confidence of the whole flow. One step here resolved through an interface.</p>
+          <div class="hr"></div>
+          <ul class="breakdown">
+            <li><span class="dot ok"></span>Observed<b>9</b></li>
+            <li><span class="dot event"></span>Inferred<b>1</b></li>
+            <li><span class="dot"></span>Reported<b>0</b></li>
+            <li><span class="dot"></span>Unresolved<b>0</b></li>
+          </ul>
+          <div class="hr"></div>
+          <div class="label">Weakest edge</div>
+          <div class="chain">
+            GatewayFactory.select → StripeGateway
+            <em>s.gateway has type payment.Gateway</em>
+            <em>payment.Gateway has 1 registered implementation</em>
+            <em>wire.go:31 binds it to *StripeGateway</em>
+          </div>
+          <div style="margin-top:14px;"><a href="#">View evidence →</a></div>
+        </aside>
+      </div>
+    </main>

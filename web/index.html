@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="description" content="RepoSweep local repository activity dashboard">
+    <title>RepoSweep · Live repository intelligence</title>
+    <link rel="stylesheet" href="/app.css">
+  </head>
+  <body>
+    <div class="shell">
+      <aside class="sidebar">
+        <a class="brand" href="/" aria-label="RepoSweep home">
+          <span class="brand-mark">R</span>
+          <span>RepoSweep</span>
+        </a>
+        <nav aria-label="Primary navigation">
+          <button class="nav-item active" type="button"><span>⌁</span> Pulse</button>
+          <button class="nav-item" type="button"><span>↳</span> Flows <i>Soon</i></button>
+          <button class="nav-item" type="button"><span>△</span> Changes</button>
+          <button class="nav-item" type="button"><span>✦</span> Agents</button>
+        </nav>
+        <div class="sidebar-foot">
+          <div class="local-badge"><span></span> Local only</div>
+          <p>No source code leaves this machine.</p>
+        </div>
+      </aside>
+
+      <main>
+        <header class="topbar">
+          <div>
+            <div class="eyebrow">Repository</div>
+            <h1 id="repo-name">Connecting…</h1>
+          </div>
+          <div class="connection" id="connection"><span></span><b>Connecting</b></div>
+        </header>
+
+        <section class="hero">
+          <div>
+            <p class="eyebrow">Repository pulse</p>
+            <h2>See the change.<br><em>Understand the consequence.</em></h2>
+            <p class="hero-copy">A live, evidence-backed briefing while coding agents and humans reshape your codebase.</p>
+          </div>
+          <div class="stats" aria-label="Repository activity summary">
+            <div><strong id="change-count">0</strong><span>Changes</span></div>
+            <div><strong id="agent-count">0</strong><span>Agents</span></div>
+            <div><strong id="risk-count">0</strong><span>Needs review</span></div>
+          </div>
+        </section>
+
+        <section class="workspace">
+          <div class="activity-column">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">Live timeline</p>
+                <h3>What is happening now</h3>
+              </div>
+              <div class="filters" role="group" aria-label="Filter events">
+                <button class="filter active" data-filter="all" type="button">All</button>
+                <button class="filter" data-filter="change" type="button">Changes</button>
+                <button class="filter" data-filter="agent" type="button">Agents</button>
+              </div>
+            </div>
+            <div class="empty" id="empty-state">
+              <span class="radar"></span>
+              <h4>Watching for activity</h4>
+              <p>Edit a file or report an agent intent. The timeline will update without a refresh.</p>
+            </div>
+            <ol class="timeline" id="timeline" aria-live="polite"></ol>
+          </div>
+
+          <aside class="detail-panel" id="detail-panel">
+            <div class="section-heading compact">
+              <div>
+                <p class="eyebrow">Evidence inspector</p>
+                <h3>Make every claim traceable</h3>
+              </div>
+            </div>
+            <div class="detail-empty" id="detail-empty">
+              <div class="evidence-icon">⌕</div>
+              <p>Select an activity to inspect its confidence, source, and exact path.</p>
+            </div>
+            <div class="detail-content hidden" id="detail-content">
+              <div class="detail-meta"><span id="detail-confidence"></span><span id="detail-risk"></span></div>
+              <h4 id="detail-title"></h4>
+              <p id="detail-summary"></p>
+              <div class="detail-block">
+                <label>Path</label>
+                <code id="detail-path"></code>
+              </div>
+              <div class="detail-block">
+                <label>Evidence</label>
+                <ul id="detail-evidence"></ul>
+              </div>
+              <div class="truth-note"><b>Truth contract</b><br>Observed facts come from native events. Inferences are heuristics and never presented as certain behavior.</div>
+            </div>
+          </aside>
+        </section>
+      </main>
+    </div>
+    <script src="/app.js" defer></script>
+  </body>
+</html>

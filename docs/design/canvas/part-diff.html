@@ -1,0 +1,126 @@
+    <main class="main">
+      <section class="chg-head">
+        <div class="row">
+          <h1>Changes</h1>
+          <span class="btn primary">Explore impact</span>
+        </div>
+        <div class="compare">
+          <span class="chip">main</span>
+          <span class="arrow">←</span>
+          <span class="chip">feature/payment-routing</span>
+          <span class="meta">12 files changed · 4 components affected · agent codex</span>
+        </div>
+      </section>
+
+      <div class="chg-body">
+        <div class="impact">
+          <div class="label">Architecture impact</div>
+
+          <div class="panelbox">
+            <div class="meta mono">Before</div>
+            <div class="hflow">
+              <div class="node one" style="width:200px;"><div class="nm">PaymentService</div></div>
+              <svg width="56" height="10" viewBox="0 0 56 10" fill="none" aria-hidden="true">
+                <path d="M0 5h48" stroke="#292C31" stroke-width="1"/>
+                <path d="M47 1.5 51.5 5 47 8.5" stroke="#3B4047" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <div class="node one" style="width:200px;"><div class="nm">StripeGateway</div></div>
+            </div>
+          </div>
+
+          <div class="panelbox">
+            <div class="meta mono">After</div>
+            <div class="hflow">
+              <div class="node one" style="width:200px;"><div class="nm">PaymentService</div></div>
+              <svg width="56" height="10" viewBox="0 0 56 10" fill="none" aria-hidden="true">
+                <path d="M0 5h48" stroke="oklch(0.70 0.128 268 / 0.6)" stroke-width="1.4"/>
+                <path d="M47 1.5 51.5 5 47 8.5" stroke="oklch(0.70 0.128 268 / 0.85)" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <div class="node one" style="width:220px;"><div class="nm">GatewayRouter<span class="new">New</span></div></div>
+              <svg width="44" height="104" viewBox="0 0 44 104" fill="none" aria-hidden="true">
+                <path d="M0 52h16M16 20v64M16 20h26M16 84h26" stroke="#292C31" stroke-width="1" stroke-linecap="round"/>
+                <path d="M38 16.5 42.5 20 38 23.5M38 80.5 42.5 84 38 87.5" stroke="#3B4047" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <div class="vstack">
+                <div class="node one" style="width:230px;"><div class="nm">StripeGateway</div></div>
+                <div class="node one" style="width:230px;"><div class="nm">RazorpayGateway<span class="new">New</span></div></div>
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top:26px;">
+            <div class="label">Component changes</div>
+            <ul class="changes">
+              <li><span class="sign add">+</span>GatewayRouter<span class="k">Factory · 1 file</span></li>
+              <li><span class="sign add">+</span>RazorpayGateway<span class="k">Gateway · 2 files</span></li>
+              <li><span class="sign mod">~</span>PaymentService<span class="k">Service · 1 file</span></li>
+              <li class="nest"><span class="sign add">+</span>calls GatewayRouter.route()</li>
+              <li class="nest"><span class="sign rem">−</span>no longer calls StripeGateway directly</li>
+            </ul>
+          </div>
+
+          <div class="affected">
+            <span class="label">Affected</span>
+            <div class="stat"><b>2</b><span>APIs</span></div>
+            <div class="stat"><b>4</b><span>services</span></div>
+            <div class="stat"><b>1</b><span>event</span></div>
+          </div>
+        </div>
+
+        <aside class="blast">
+          <div class="label">Blast radius</div>
+          <div class="blast-sel"><span class="dot"></span>GatewayRouter</div>
+
+          <div class="tree">
+            <div class="node one"><div class="nm">CheckoutController</div></div>
+            <div class="conn"><i></i></div>
+            <div class="node one"><div class="nm">PaymentService</div></div>
+            <div class="conn"><i></i></div>
+            <div class="node one sel"><div class="nm">GatewayRouter</div></div>
+            <svg width="300" height="24" viewBox="0 0 300 24" fill="none" aria-hidden="true" style="align-self:center;">
+              <path d="M150 0v10M74 10h152M74 10v14M226 10v14" stroke="#292C31" stroke-width="1" stroke-linecap="round"/>
+            </svg>
+            <div class="pair">
+              <div class="node one"><div class="nm"><span class="dot ext"></span>Stripe</div></div>
+              <div class="node one"><div class="nm"><span class="dot ext"></span>Razorpay</div></div>
+            </div>
+          </div>
+
+          <div class="hr"></div>
+
+          <div class="label">Potential impact</div>
+          <ul class="impacts">
+            <li>
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                <path d="M6 10V2M2.6 5.4 6 2l3.4 3.4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <b>3</b><span>callers</span>
+            </li>
+            <li>
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                <path d="M2 6h8M6.6 2.6 10 6l-3.4 3.4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <b>2</b><span>execution flows</span>
+            </li>
+            <li>
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                <circle cx="6" cy="6" r="4.4" stroke="currentColor" stroke-width="1.3"/>
+                <circle cx="6" cy="6" r="1.4" fill="currentColor"/>
+              </svg>
+              <b>4</b><span>API endpoints</span>
+            </li>
+            <li>
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                <path d="M6 1.6 10.4 6 6 10.4 1.6 6 6 1.6Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/>
+              </svg>
+              <b>12</b><span>tests</span>
+            </li>
+          </ul>
+
+          <div class="blast-foot">
+            <span class="btn">Trace upstream</span>
+            <span class="btn">Trace downstream</span>
+          </div>
+        </aside>
+      </div>
+    </main>

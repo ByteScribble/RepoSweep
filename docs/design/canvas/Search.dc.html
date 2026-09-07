@@ -1,0 +1,342 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&amp;family=Geist+Mono:wght@400;500;600&amp;display=swap">
+  <style>
+  :root{
+    --app:#0D0E10; --ws:#111214; --surface:#16181B; --elev:#1C1E22; --line:#292C31;
+    --line-soft:#1F2226;
+    --t1:#F1F2F4; --t2:#A2A7AE; --t3:#686E76;
+    --accent:oklch(0.70 0.128 268); --accent-soft:oklch(0.70 0.128 268 / 0.14);
+    --accent-line:oklch(0.70 0.128 268 / 0.55);
+    --http:oklch(0.70 0.128 250); --db:oklch(0.70 0.128 305); --event:oklch(0.78 0.115 80);
+    --ext:oklch(0.76 0.095 205); --err:oklch(0.66 0.155 25); --ok:oklch(0.72 0.115 155);
+    --sans:"Geist","Geist Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+    --mono:"Geist Mono",ui-monospace,SFMono-Regular,"SF Mono",Menlo,monospace;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--app);color:var(--t1);font-family:var(--sans);font-size:13px;line-height:20px;-webkit-font-smoothing:antialiased;}
+  a{color:var(--accent);text-decoration:none;} a:hover{color:oklch(0.78 0.128 268);}
+  .screen{position:relative;width:1440px;height:900px;display:flex;flex-direction:column;overflow:hidden;background:var(--app);}
+
+  /* ---- top bar ---- */
+  .topbar{height:48px;flex-shrink:0;border-bottom:1px solid var(--line);background:var(--app);
+    display:flex;align-items:center;justify-content:space-between;padding:0 16px;gap:24px;}
+  .tb-left{display:flex;align-items:center;gap:12px;}
+  .brand{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;letter-spacing:-0.012em;}
+  .tb-div{width:1px;height:18px;background:var(--line);}
+  .repo-chip{display:flex;align-items:center;gap:7px;height:26px;padding:0 9px;border-radius:7px;
+    font-family:var(--mono);font-size:12px;color:var(--t1);}
+  .repo-chip:hover{background:var(--elev);}
+  .caret{color:var(--t3);font-size:9px;}
+  .search-pill{width:340px;height:30px;border:1px solid var(--line);background:var(--surface);border-radius:8px;
+    display:flex;align-items:center;gap:9px;padding:0 10px;color:var(--t3);font-size:12px;}
+  .kbd{margin-left:auto;font-family:var(--mono);font-size:11px;font-weight:500;color:var(--t3);
+    border:1px solid var(--line);border-radius:5px;padding:1px 5px;line-height:16px;}
+  .tb-right{display:flex;align-items:center;gap:14px;}
+  .branch{display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:12px;color:var(--t2);}
+  .sync{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--t2);}
+  .sync .led{width:6px;height:6px;border-radius:50%;background:var(--ok);box-shadow:0 0 0 3px oklch(0.72 0.115 155 / 0.16);}
+
+  /* ---- body + rail ---- */
+  .body{flex:1;min-height:0;display:flex;}
+  .rail{width:52px;flex-shrink:0;border-right:1px solid var(--line);background:var(--app);
+    display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 0;}
+  .rail-btn{width:34px;height:34px;border-radius:8px;display:grid;place-items:center;color:var(--t3);}
+  .rail-btn.active{background:var(--accent-soft);color:var(--accent);}
+  .rail-spacer{margin-top:auto;}
+  .main{flex:1;min-width:0;display:flex;flex-direction:column;background:var(--ws);}
+
+  /* ---- generic ---- */
+  .label{font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:0.14em;
+    text-transform:uppercase;color:var(--t3);}
+  .meta{font-size:11px;line-height:16px;font-weight:500;color:var(--t3);}
+  .sec{font-size:14px;line-height:20px;font-weight:600;letter-spacing:-0.008em;}
+  .mono{font-family:var(--mono);}
+  .chip{height:22px;display:inline-flex;align-items:center;padding:0 8px;border:1px solid var(--line);
+    border-radius:6px;background:var(--surface);font-family:var(--mono);font-size:11px;color:var(--t2);}
+  .btn{height:30px;display:inline-flex;align-items:center;gap:8px;padding:0 12px;border:1px solid var(--line);
+    border-radius:8px;background:var(--elev);font-size:12px;font-weight:500;color:var(--t1);}
+  .btn:hover{border-color:#3a3f46;}
+  .btn.primary{background:var(--accent-soft);border-color:var(--accent-line);color:var(--accent);}
+  .dot{width:5px;height:5px;border-radius:50%;flex-shrink:0;background:var(--t3);}
+  .dot.http{background:var(--http);} .dot.db{background:var(--db);} .dot.event{background:var(--event);}
+  .dot.ext{background:var(--ext);} .dot.ok{background:var(--ok);} .dot.err{background:var(--err);}
+
+  /* ---- graph node ---- */
+  .node{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:10px 15px;
+    display:flex;flex-direction:column;gap:4px;}
+  .node .nm{display:flex;align-items:center;gap:7px;font-size:13px;line-height:18px;font-weight:500;letter-spacing:-0.008em;}
+  .node .kd{font-size:11px;line-height:16px;font-weight:500;color:var(--t3);}
+  .node.sel{border-color:var(--accent-line);background:var(--elev);
+    box-shadow:0 0 0 1px var(--accent-line),0 8px 24px -12px rgba(0,0,0,.9);}
+  .node.dim{opacity:.26;}
+  .repo-head{padding:22px 32px 18px;border-bottom:1px solid var(--line);flex-shrink:0;}
+  .repo-head .row{display:flex;align-items:baseline;justify-content:space-between;gap:24px;}
+  .repo-head h1{margin:0;font-size:20px;line-height:28px;font-weight:600;letter-spacing:-0.022em;}
+  .repo-head p{margin:5px 0 0;font-size:13px;line-height:20px;color:var(--t2);}
+  .repo-head .chips{display:flex;gap:8px;margin-top:12px;}
+  .map-wrap{flex:1;min-height:0;display:grid;place-items:center;}
+  .map-block{width:1324px;}
+  .map-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+  .seg{display:flex;gap:2px;padding:2px;background:var(--surface);border:1px solid var(--line);border-radius:8px;}
+  .seg span{padding:4px 10px;border-radius:6px;font-size:11px;line-height:16px;font-weight:500;color:var(--t3);}
+  .seg span.on{background:var(--elev);color:var(--t1);box-shadow:inset 0 0 0 1px var(--line);}
+  .map{position:relative;width:1324px;height:600px;}
+  .map .node{position:absolute;}
+  .cnt{margin-left:auto;font-family:var(--mono);font-size:11px;font-weight:500;color:var(--t2);}
+  .statbar{height:52px;flex-shrink:0;border-top:1px solid var(--line);padding:0 32px;
+    display:flex;align-items:center;gap:28px;}
+  .stat{display:flex;align-items:baseline;gap:7px;}
+  .stat b{font-family:var(--mono);font-size:13px;font-weight:500;color:var(--t1);}
+  .stat span{font-size:12px;line-height:18px;color:var(--t2);}
+  .unresolved{margin-left:auto;display:flex;align-items:center;gap:8px;font-size:12px;color:var(--t3);}
+  .scrim{position:absolute;inset:0;background:rgba(7,8,10,.74);backdrop-filter:blur(2px);}
+  .palette{position:absolute;top:104px;left:50%;transform:translateX(-50%);width:680px;
+    background:var(--elev);border:1px solid #34393F;border-radius:12px;overflow:hidden;
+    box-shadow:0 36px 90px -24px rgba(0,0,0,.92),0 0 0 1px rgba(0,0,0,.4);}
+  .pal-input{height:52px;display:flex;align-items:center;gap:11px;padding:0 16px;border-bottom:1px solid var(--line);
+    color:var(--t3);}
+  .pal-input .q{font-size:14px;color:var(--t1);}
+  .pal-input .bar{width:1px;height:17px;background:var(--accent);}
+  .pal-body{padding:8px 8px 10px;}
+  .pal-group{padding:8px 8px 4px;}
+  .pal-row{height:44px;display:flex;align-items:center;gap:11px;padding:0 8px;border-radius:8px;}
+  .pal-row.on{background:var(--accent-soft);box-shadow:inset 0 0 0 1px var(--accent-line);}
+  .pal-row .name{font-family:var(--mono);font-size:13px;font-weight:500;color:var(--t1);}
+  .pal-row .kind{margin-left:auto;font-size:11px;line-height:16px;color:var(--t3);font-family:var(--mono);}
+  .pal-foot{height:38px;border-top:1px solid var(--line);background:var(--surface);
+    display:flex;align-items:center;gap:16px;padding:0 14px;font-size:11px;color:var(--t3);}
+  .pal-foot .kbd{margin-left:0;}
+  .pal-foot .right{margin-left:auto;display:flex;align-items:center;gap:8px;}
+  </style>
+</helmet>
+<div class="screen">
+  <header class="topbar">
+    <div class="tb-left">
+      <div class="brand">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M8 1.4 14.6 8 8 14.6 1.4 8 8 1.4Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/>
+          <path d="M8 5.2 10.8 8 8 10.8 5.2 8 8 5.2Z" fill="currentColor" fill-opacity=".55"/>
+        </svg>
+        RepoSweep
+      </div>
+      <div class="tb-div"></div>
+      <div class="repo-chip">payments-service <span class="caret">▾</span></div>
+    </div>
+    <div class="search-pill">
+      <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <circle cx="7" cy="7" r="4.6" stroke="currentColor" stroke-width="1.3"/>
+        <path d="M10.6 10.6 14 14" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+      </svg>
+      Search codebase
+      <span class="kbd">⌘K</span>
+    </div>
+    <div class="tb-right">
+      <div class="branch">
+        <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <circle cx="4.5" cy="3.6" r="1.9" stroke="currentColor" stroke-width="1.2"/>
+          <circle cx="4.5" cy="12.4" r="1.9" stroke="currentColor" stroke-width="1.2"/>
+          <circle cx="11.5" cy="3.6" r="1.9" stroke="currentColor" stroke-width="1.2"/>
+          <path d="M4.5 5.5v5M11.5 5.5c0 3-7 1.9-7 4.9" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+        </svg>
+        main <span class="caret">▾</span>
+      </div>
+      <div class="sync"><span class="led"></span> Synced</div>
+    </div>
+  </header>
+  <div class="body">
+    <nav class="rail" aria-label="Primary">
+      <div class="rail-btn active" title="Explore">
+        <svg width="19" height="19" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <circle cx="10" cy="4.4" r="2.1" stroke="currentColor" stroke-width="1.4"/>
+          <circle cx="4.6" cy="15" r="2.1" stroke="currentColor" stroke-width="1.4"/>
+          <circle cx="15.4" cy="15" r="2.1" stroke="currentColor" stroke-width="1.4"/>
+          <path d="M8.6 6.3 6 12.9M11.4 6.3 14 12.9M6.7 15h6.6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="rail-btn " title="Flows">
+        <svg width="19" height="19" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <path d="M4.4 3.6v7.2a2.4 2.4 0 0 0 2.4 2.4h8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+          <path d="M12.4 10.6 15.6 13.2 12.4 15.8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="rail-btn " title="Changes">
+        <svg width="19" height="19" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <path d="M10 3.8 17 16.2H3L10 3.8Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="rail-btn " title="Dependencies">
+        <svg width="19" height="19" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <rect x="3.2" y="4.2" width="13.6" height="11.6" rx="2" stroke="currentColor" stroke-width="1.4"/>
+          <path d="M3.2 8.4h13.6M9 8.4v7.4" stroke="currentColor" stroke-width="1.4"/>
+        </svg>
+      </div>
+      <div class="rail-btn rail-spacer" title="Settings">
+        <svg width="19" height="19" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <path d="M3 6.6h5.2M11.6 6.6H17M3 13.4h2.6M9 13.4H17" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+          <circle cx="9.9" cy="6.6" r="1.8" stroke="currentColor" stroke-width="1.4"/>
+          <circle cx="7.3" cy="13.4" r="1.8" stroke="currentColor" stroke-width="1.4"/>
+        </svg>
+      </div>
+    </nav>
+    <main class="main">
+      <section class="repo-head">
+        <div class="row">
+          <h1>payments-service</h1>
+          <div class="meta mono">Last indexed 12s ago</div>
+        </div>
+        <p>Payment processing and transaction orchestration.</p>
+        <div class="chips">
+          <span class="chip">Java 21</span>
+          <span class="chip">Spring Boot</span>
+          <span class="chip">Maven</span>
+        </div>
+      </section>
+
+      <div class="map-wrap">
+        <div class="map-block">
+          <div class="map-head">
+            <div class="label">Codebase map</div>
+            <div class="seg">
+              <span class="on">Architecture</span>
+              <span>Domain</span>
+              <span>Component</span>
+              <span>Method</span>
+            </div>
+          </div>
+
+          <div class="map">
+            <svg width="1324" height="600" viewBox="0 0 1324 600" fill="none" aria-hidden="true"
+                 style="position:absolute;inset:0;">
+              <g stroke="#292C31" stroke-width="1" stroke-linecap="round">
+                <path d="M662 100V148"/>
+                <path d="M662 208V238M342 238H982M342 238V268M662 238V268M982 238V268"/>
+                <path d="M342 328V358M662 328V358M982 328V358M342 358H982M662 358V388"/>
+                <path d="M662 448V478M342 478H982M342 478V508M662 478V508M982 478V508"/>
+              </g>
+              <g stroke="#3B4047" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M658.5 143.5 662 147.5 665.5 143.5"/>
+                <path d="M338.5 263.5 342 267.5 345.5 263.5"/>
+                <path d="M658.5 263.5 662 267.5 665.5 263.5"/>
+                <path d="M978.5 263.5 982 267.5 985.5 263.5"/>
+                <path d="M658.5 383.5 662 387.5 665.5 383.5"/>
+                <path d="M338.5 503.5 342 507.5 345.5 503.5"/>
+                <path d="M658.5 503.5 662 507.5 665.5 503.5"/>
+                <path d="M978.5 503.5 982 507.5 985.5 503.5"/>
+              </g>
+            </svg>
+
+            <div class="node" style="left:578px;top:40px;width:168px;">
+              <div class="nm"><span class="dot http"></span>APIs<span class="cnt">12</span></div>
+              <div class="kd">HTTP entry points</div>
+            </div>
+
+            <div class="node" style="left:567px;top:148px;width:190px;">
+              <div class="nm">Controllers<span class="cnt">6</span></div>
+              <div class="kd">Request handlers</div>
+            </div>
+
+            <div class="node" style="left:264px;top:268px;width:156px;">
+              <div class="nm">Payments</div>
+              <div class="kd">Domain · 8 services</div>
+            </div>
+            <div class="node" style="left:584px;top:268px;width:156px;">
+              <div class="nm">Orders</div>
+              <div class="kd">Domain · 6 services</div>
+            </div>
+            <div class="node" style="left:904px;top:268px;width:156px;">
+              <div class="nm">Refunds</div>
+              <div class="kd">Domain · 4 services</div>
+            </div>
+
+            <div class="node" style="left:567px;top:388px;width:190px;">
+              <div class="nm">Services<span class="cnt">18</span></div>
+              <div class="kd">Business logic</div>
+            </div>
+
+            <div class="node" style="left:263px;top:508px;width:158px;">
+              <div class="nm"><span class="dot db"></span>PostgreSQL</div>
+              <div class="kd">7 repositories</div>
+            </div>
+            <div class="node" style="left:583px;top:508px;width:158px;">
+              <div class="nm"><span class="dot event"></span>Kafka</div>
+              <div class="kd">4 consumers · 3 topics</div>
+            </div>
+            <div class="node" style="left:903px;top:508px;width:158px;">
+              <div class="nm"><span class="dot ext"></span>Stripe</div>
+              <div class="kd">External API</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer class="statbar">
+        <div class="stat"><b>12</b><span>APIs</span></div>
+        <div class="stat"><b>18</b><span>Services</span></div>
+        <div class="stat"><b>7</b><span>Repositories</span></div>
+        <div class="stat"><b>4</b><span>Consumers</span></div>
+        <div class="stat"><b>3</b><span>External</span></div>
+        <div class="unresolved"><span class="dot event"></span>3 relations unresolved</div>
+      </footer>
+    </main>
+  </div>
+  <div class="scrim"></div>
+  <div class="palette">
+    <div class="pal-input">
+      <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <circle cx="7" cy="7" r="4.6" stroke="currentColor" stroke-width="1.3"/>
+        <path d="M10.6 10.6 14 14" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+      </svg>
+      <span class="q">payment</span><span class="bar"></span>
+    </div>
+    <div class="pal-body">
+      <div class="label pal-group">Symbols</div>
+      <div class="pal-row on">
+        <span class="dot"></span><span class="name">PaymentService</span>
+        <span class="kind">Service · src/payment/PaymentService.java</span>
+      </div>
+      <div class="pal-row">
+        <span class="dot db"></span><span class="name">PaymentRepository</span>
+        <span class="kind">Repository · src/payment/PaymentRepository.java</span>
+      </div>
+
+      <div class="label pal-group">Entry points</div>
+      <div class="pal-row">
+        <span class="dot http"></span><span class="name">POST /payments</span>
+        <span class="kind">API · PaymentController</span>
+      </div>
+      <div class="pal-row">
+        <span class="dot http"></span><span class="name">GET /payments/{id}</span>
+        <span class="kind">API · PaymentController</span>
+      </div>
+
+      <div class="label pal-group">Events</div>
+      <div class="pal-row">
+        <span class="dot event"></span><span class="name">payment.completed</span>
+        <span class="kind">Kafka topic · 2 consumers</span>
+      </div>
+
+      <div class="label pal-group">Data</div>
+      <div class="pal-row">
+        <span class="dot db"></span><span class="name">payments</span>
+        <span class="kind">PostgreSQL table · 11 columns</span>
+      </div>
+    </div>
+    <div class="pal-foot">
+      <span class="kbd">↑↓</span> Navigate
+      <span class="kbd">↵</span> Open
+      <span class="kbd">⌘↵</span> Open source
+      <span class="right">Ask a question instead <span class="kbd">⌘J</span></span>
+    </div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

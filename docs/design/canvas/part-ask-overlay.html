@@ -1,0 +1,24 @@
+  <div class="scrim"></div>
+  <div class="ask">
+    <div class="answer">
+      <div class="a-head">
+        <span class="pill">Answer</span>
+        <span class="meta">Based on the repository graph</span>
+      </div>
+      <p>PaymentService calls FraudService.check() before gateway authorization, inside PaymentService.process(). A failed check short-circuits the flow before any charge is attempted.</p>
+      <div class="label" style="margin-top:18px;">Evidence</div>
+      <ul class="ev">
+        <li><b>PaymentService.java:72</b>fraud.check(ctx, payment)</li>
+        <li><b>FraudService.java:31</b>public Decision check(Context ctx, Payment p)</li>
+      </ul>
+      <div class="a-foot">
+        <span class="btn primary">Show path</span>
+        <span class="btn">Open source</span>
+        <span class="note">Prose from a model · topology from the graph</span>
+      </div>
+    </div>
+    <div class="composer">
+      <span>Explain why PaymentService depends on FraudService.</span>
+      <span class="kbd">⌘J</span>
+    </div>
+  </div>
