@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Hrtkk/reposweep/internal/events"
+	"github.com/ByteScribble/RepoSweep/internal/events"
 )
 
 func TestWatcherPublishesCreatedFile(t *testing.T) {

@@ -1,4 +1,4 @@
-module github.com/Hrtkk/reposweep
+module github.com/ByteScribble/RepoSweep
 
 go 1.22
 

@@ -11,8 +11,8 @@ import (
 	"time"
 
 	"github.com/fsnotify/fsnotify"
-	"github.com/Hrtkk/reposweep/internal/events"
-	"github.com/Hrtkk/reposweep/internal/insight"
+	"github.com/ByteScribble/RepoSweep/internal/events"
+	"github.com/ByteScribble/RepoSweep/internal/insight"
 )
 
 const debounceWindow = 140 * time.Millisecond

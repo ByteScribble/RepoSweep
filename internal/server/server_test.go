@@ -6,7 +6,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/Hrtkk/reposweep/internal/events"
+	"github.com/ByteScribble/RepoSweep/internal/events"
 )
 
 func TestIngestRejectsUnknownFields(t *testing.T) {

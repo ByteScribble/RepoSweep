@@ -8,8 +8,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Hrtkk/reposweep/internal/events"
-	webassets "github.com/Hrtkk/reposweep/web"
+	"github.com/ByteScribble/RepoSweep/internal/events"
+	webassets "github.com/ByteScribble/RepoSweep/web"
 )
 
 type Server struct {

@@ -4,7 +4,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/Hrtkk/reposweep/internal/events"
+	"github.com/ByteScribble/RepoSweep/internal/events"
 )
 
 func Classify(path, operation string) events.Event {

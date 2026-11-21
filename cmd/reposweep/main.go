@@ -14,9 +14,9 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/Hrtkk/reposweep/internal/events"
-	"github.com/Hrtkk/reposweep/internal/server"
-	"github.com/Hrtkk/reposweep/internal/watcher"
+	"github.com/ByteScribble/RepoSweep/internal/events"
+	"github.com/ByteScribble/RepoSweep/internal/server"
+	"github.com/ByteScribble/RepoSweep/internal/watcher"
 )
 
 const version = "0.1.0-dev"
