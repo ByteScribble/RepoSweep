@@ -19,3 +19,19 @@
 
 # OS
 .DS_Store
+
+# Secrets and local config (never commit)
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p8
+*.p12
+*.jks
+*.keystore
+*.mobileprovision
+key.properties
+credentials*.json
+service-account*.json
+.claude/settings.local.json
